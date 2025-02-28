@@ -4,15 +4,15 @@ from sqlalchemy.sql import text
 def seed_clips():
     clip1 = Clip(
         title="Insane Combo", description="A crazy 10-hit combo!",
-        video_url="https://example.com/clip1.mp4", user_id=1
+        file_url="https://example.com/clip1.mp4", user_id=1
     )
     clip2 = Clip(
         title="Perfect Execution", description="Frame-perfect inputs!",
-        video_url="https://example.com/clip2.mp4", user_id=2
+        file_url="https://example.com/clip2.mp4", user_id=2
     )
     clip3 = Clip(
         title="Comeback Victory", description="An amazing last-second win!",
-        video_url="https://example.com/clip3.mp4", user_id=3
+        file_url="https://example.com/clip3.mp4", user_id=3
     )
 
     db.session.add_all([clip1, clip2, clip3])
