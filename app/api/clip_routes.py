@@ -97,6 +97,7 @@ def delete_clip(clip_id):
 
     if not clip:
         return jsonify({"error": "Clip not found"}), 404
+    
 
     db.session.delete(clip)
     db.session.commit()
