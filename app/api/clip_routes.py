@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Clip, db
 from app.forms.clip_form import ClipForm
+from app.api.aws_helpers import upload_file_to_s3, get_unique_filename
 
 clip_routes = Blueprint("clips", __name__)
 
@@ -37,8 +38,25 @@ def post_a_clip():
     form["csrf_token"].data = request.cookies["csrf_token"]
 
     if form.validate_on_submit():
-        new_clip = Clip()
-        form.populate_obj(new_clip)
+
+        user_id = form.data["user_id"]
+        title = form.data["title"]
+        description = form.data["description"]
+        file_url = form.data["file_url"]
+
+        file_url.filename = get_unique_filename(file_url.filename)
+        upload = upload_file_to_s3(file_url)
+        print(upload)
+
+        if "url" not in upload:
+        # if the dictionary doesn't have a url key
+        # it means that there was an error when you tried to upload
+        # so you send back that error message (and you printed it above)
+            return { "errors":[upload] }, 400
+
+        url = upload["url"]
+
+        new_clip = Clip(user_id=user_id, title=title, description=description, file_url=url)
 
         db.session.add(new_clip)
 
@@ -63,7 +81,9 @@ def update_clip(clip_id):
     form["csrf_token"].data = request.cookies.get("csrf_token", "")
 
     if form.validate_on_submit():
+
         form.populate_obj(clip)  # Updates the existing clip with form data
+
         db.session.commit()
         return clip.to_dict()
 
