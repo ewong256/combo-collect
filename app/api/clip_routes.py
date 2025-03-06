@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Clip, db
 from app.forms.clip_form import ClipForm
-from app.api.aws_helpers import upload_file_to_s3, get_unique_filename
+from app.api.aws_helpers import upload_file_to_s3, get_unique_filename, remove_file_from_s3
 
 clip_routes = Blueprint("clips", __name__)
 
@@ -95,9 +95,18 @@ def update_clip(clip_id):
 def delete_clip(clip_id):
     clip = Clip.query.get(clip_id)
 
+
     if not clip:
         return jsonify({"error": "Clip not found"}), 404
+
+
+    s3_delete_response = remove_file_from_s3(clip.file_url)
+
     
+    if s3_delete_response is not True:
+        return jsonify(s3_delete_response), 500
+
+
 
     db.session.delete(clip)
     db.session.commit()

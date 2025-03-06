@@ -22,7 +22,7 @@ export const getAllClipsThunk = () => async (dispatch) => {
     } else {
         const errors = await res.json();
         return errors;
-    };
+    }
 };
 
 export default function clipsReducer(state = {}, { type, payload }) {
@@ -33,6 +33,6 @@ export default function clipsReducer(state = {}, { type, payload }) {
 
         default:
             return state
-    };
+    }
 
-};
+}
