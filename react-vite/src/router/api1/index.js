@@ -13,7 +13,6 @@ export const getClipById = async (clip_id) => {
 }
 
 
-
 export const postNewClip = async ({ request }) => {
     const newClip = await request.formData()
 

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import LoginFormPage from '../components/LoginFormPage';
 import SignupFormPage from '../components/SignupFormPage';
+import DeleteClipConfirmation from '../components/DeleteClipConfirmation';
 import Home from "../components/Home"
 import Layout from './Layout';
 import * as api from './api1'
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignupFormPage />,
+      },
+      {
+        path: "clips/:clip_id/delete",
+        element: <DeleteClipConfirmation />,
       },
     ],
   },
