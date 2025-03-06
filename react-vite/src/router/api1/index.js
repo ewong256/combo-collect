@@ -12,7 +12,21 @@ export const getClipById = async (clip_id) => {
     return data
 }
 
+export async function updateClip(clip_id, updatedData) {
+    const response = await fetch(`/api/clips/${clip_id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+    });
 
+    if (!response.ok) {
+        return { errors: await response.json() };
+    }
+
+    return { success: true, clip: await response.json() };
+}
 
 export const postNewClip = async ({ request }) => {
     const newClip = await request.formData()
