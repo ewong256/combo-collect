@@ -1,9 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom';
-import LoginFormPage from '../components/LoginFormPage';
-import SignupFormPage from '../components/SignupFormPage';
-import Home from "../components/Home"
-import Layout from './Layout';
-import * as api from './api1'
+import { createBrowserRouter } from "react-router-dom";
+import Home from "../components/Home";
+import Layout from "./Layout";
+import LoginFormPage from "../components/LoginFormPage";
+import SignupFormPage from "../components/SignupFormPage";
+import * as api from "./api1/index"
 
 export const router = createBrowserRouter([
   {
@@ -13,7 +13,15 @@ export const router = createBrowserRouter([
         path: "/",
         element: <Home />,
         loader: api.getAllClips,
-        action: api.postNewClip
+        action: api.postNewClip,
+      },
+      {
+        path: "/clips/:clip_id",
+        action: api.updateClip,
+      },
+      {
+        path: "/clip/:clip_id",
+        action: api.deleteClip,
       },
       {
         path: "login",

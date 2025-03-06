@@ -15,10 +15,7 @@ export const getClipById = async (clip_id) => {
 export async function updateClip(clip_id, updatedData) {
     const response = await fetch(`/api/clips/${clip_id}`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
+        body: updatedData,
     });
 
     if (!response.ok) {
@@ -27,7 +24,6 @@ export async function updateClip(clip_id, updatedData) {
 
     return { success: true, clip: await response.json() };
 }
-
 export const postNewClip = async ({ request }) => {
     const newClip = await request.formData()
 

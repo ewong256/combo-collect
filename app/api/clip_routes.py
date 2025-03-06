@@ -81,8 +81,20 @@ def update_clip(clip_id):
     form["csrf_token"].data = request.cookies.get("csrf_token", "")
 
     if form.validate_on_submit():
+        clip.title = form.data["title"]
+        clip.description = form.data["description"]
 
-        form.populate_obj(clip)  # Updates the existing clip with form data
+        if "file_url" in request.files:
+            file = request.files["file_url"]
+            file.filename = get_unique_filename(file.filename)
+            upload = upload_file_to_s3(file)
+
+            if "url" not in upload:
+                return {"errors": [upload]}, 400
+
+            remove_file_from_s3(clip.file_url)
+
+            clip.file_url = upload["url"]
 
         db.session.commit()
         return clip.to_dict()
@@ -102,7 +114,7 @@ def delete_clip(clip_id):
 
     s3_delete_response = remove_file_from_s3(clip.file_url)
 
-    
+
     if s3_delete_response is not True:
         return jsonify(s3_delete_response), 500
 
